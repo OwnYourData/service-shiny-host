@@ -1,0 +1,11 @@
+{
+	"name":"OwnYourData Shiny Host",
+	"identifier":"eu.ownyourdata.shinyhost",
+	"type":"host",
+	"hostings": ["shiny"],
+	"description":"Host for Shiny Applications, accessing the PIA",
+	"environment": "docker",
+	"installCommand": "npm install && node install.js",
+	"startCommand": "node index.js",
+	"modules":"modules"
+}
