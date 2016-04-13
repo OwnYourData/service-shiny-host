@@ -14,7 +14,7 @@ docker.run('fabianekc/oyd_shiny', [], process.stdout, {
   },
 }, {
   'Binds': [absolutModulesPath+':/srv/shiny-server/'],
-  'PortBindings': { '3838/tcp': [{ 'HostPort': '8083' }] }
+  'PortBindings': { '3838/tcp': [{ 'HostPort': '8070' }] }
 }, function(err, data, container) {
 	console.log(err);
   	console.log(data);
