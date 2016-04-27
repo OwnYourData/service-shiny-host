@@ -1,5 +1,5 @@
 var port = process.env.PORT || 8081;
-var shiny = process.env.DOCKER_HOST;
+var dockerHost = process.env.DOCKER_HOST;
 
 var path = require('path');
 var Docker = require('dockerode');
@@ -19,19 +19,30 @@ docker.run('fabianekc/oyd_shiny', [], process.stdout, {
   },
 }, {
   'Binds': [absolutModulesPath+':/srv/shiny-server/'],
-  'PortBindings': { '3838/tcp': [{ 'HostPort': '8070' }] }
+  'PortBindings': { '3838/tcp': [{ 'HostPort': port }] }
 }, function(err, data, container) {
 	console.log(err);
   	console.log(data);
   	console.log(container);
 });
 
-app.use(function(req,res) {
-   var host = req.headers.host.split(':')[0];
-   res.writeHead(301, {Location: shiny+'/'+req.url});
-   res.end();
-});
+if(dockerHost.startsWith('socket')) {
+  console.log('docker is running directly on this machine.');
+}
+if(dockerHost.startsWith('tcp')) {
+  console.log('docker is running on a virtual machine, creating redirect');
 
-app.listen(port,function() {
-  console.log('eu.ownyourdata.shiny is listening on port '+port);
-});
+  var shiny = dockerHost.substring(6);
+
+  app.use(function(req,res) {
+   var location = req.url ? shiny + '/' + req.url : shiny;
+   console.log('redirecting to '+location);
+   res.writeHead(301, {Location: location});
+   res.end();
+  });
+
+  app.listen(port,function() {
+    console.log('eu.ownyourdata.shiny is listening on port '+port);
+  });
+}
+
