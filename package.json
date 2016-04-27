@@ -15,6 +15,7 @@
   "author": "eu.ownyourdata",
   "license": "MIT",
   "dependencies": {
+    "connect": "^3.4.1",
     "dockerode": "^2.2.10"
   },
   "devDependencies": {
