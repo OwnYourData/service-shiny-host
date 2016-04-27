@@ -19,7 +19,7 @@ docker.run('fabianekc/oyd_shiny', [], process.stdout, {
   },
 }, {
   'Binds': [absolutModulesPath+':/srv/shiny-server/'],
-  'PortBindings': { '3838/tcp': [{ 'HostPort': port }] }
+  'PortBindings': { '3838/tcp': [{ 'HostPort': port + '' }] }
 }, function(err, data, container) {
 	console.log(err);
   	console.log(data);
@@ -35,7 +35,10 @@ if(dockerHost.startsWith('tcp')) {
   var shiny = dockerHost.substring(6);
 
   app.use(function(req,res) {
-   var location = req.url ? shiny + '/' + req.url : shiny;
+   var location = 'http://'+ shiny.split(':')[0]+':'+port;
+   if (req.url != '/') {
+      location += '/'+req.url;
+   }
    console.log('redirecting to '+location);
    res.writeHead(301, {Location: location});
    res.end();
